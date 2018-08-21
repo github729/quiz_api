@@ -68,7 +68,14 @@ exports.updateChapter = function (req, res) {
 };
 
 exports.getChapters = function (req, res) {
-    models.chapters.findAll({}).then(chapters => {
+    models.chapters.belongsTo(models.courses,{foreignKey:'courseId'})
+    models.chapters.findAll({
+        include:[
+            {
+                model:models.courses,
+            }
+        ]
+    }).then(chapters => {
         let result = {};
         if (chapters) {
             result.success = true;
