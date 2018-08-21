@@ -12,6 +12,12 @@ module.exports = function (app) {
         res.send('Welcome to Quiz Api')
     });
 
+    //courses urls
+    apiRoutes.post('/course',CourseController.createCourse);
+    apiRoutes.get('/course/:id',CourseController.getCourseById);
+    apiRoutes.put('/course/:id',CourseController.updateCourse);
+    apiRoutes.get('/courses',CourseController.getCourses);
+    apiRoutes.delete('/course/:id',CourseController.deleteCourse);
     app.use('/v1',apiRoutes);
     
 }
