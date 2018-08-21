@@ -18,6 +18,7 @@ module.exports = function (app) {
     apiRoutes.put('/course/:id',CourseController.updateCourse);
     apiRoutes.get('/courses',CourseController.getCourses);
     apiRoutes.delete('/course/:id',CourseController.deleteCourse);
+    
     //chapters urls
     apiRoutes.post('/chapter',ChapterController.createChapter);
     apiRoutes.get('/chapter/:id',ChapterController.getChapterById);
