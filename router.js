@@ -23,7 +23,7 @@ module.exports = function (app) {
     apiRoutes.post('/chapter',ChapterController.createChapter);
     apiRoutes.get('/chapter/:id',ChapterController.getChapterById);
     apiRoutes.put('/chapter/:id',ChapterController.updateChapter);
-    apiRoutes.get('/chapters',ChapterController.getChapters);
+    apiRoutes.get('/chapters/:id',ChapterController.getChapters);
     apiRoutes.delete('/chapter/:id',ChapterController.deleteChapter);
     app.use('/v1',apiRoutes);
     

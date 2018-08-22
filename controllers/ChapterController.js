@@ -73,6 +73,7 @@ exports.getChapters = function (req, res) {
         include:[
             {
                 model:models.courses,
+                where:{ 'id' : req.params.id}
             }
         ]
     }).then(chapters => {
