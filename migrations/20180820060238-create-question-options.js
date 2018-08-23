@@ -11,6 +11,9 @@ module.exports = {
       qnsId: {
         type: Sequelize.INTEGER
       },
+      optId: {
+        type: Sequelize.INTEGER
+      },
       option_text: {
         type: Sequelize.STRING
       },

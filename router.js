@@ -13,18 +13,26 @@ module.exports = function (app) {
     });
 
     //courses urls
-    apiRoutes.post('/course',CourseController.createCourse);
-    apiRoutes.get('/course/:id',CourseController.getCourseById);
-    apiRoutes.put('/course/:id',CourseController.updateCourse);
-    apiRoutes.get('/courses',CourseController.getCourses);
-    apiRoutes.delete('/course/:id',CourseController.deleteCourse);
-    
+    apiRoutes.post('/course', CourseController.createCourse);
+    apiRoutes.get('/course/:id', CourseController.getCourseById);
+    apiRoutes.put('/course/:id', CourseController.updateCourse);
+    apiRoutes.get('/courses', CourseController.getCourses);
+    apiRoutes.delete('/course/:id', CourseController.deleteCourse);
+
     //chapters urls
-    apiRoutes.post('/chapter',ChapterController.createChapter);
-    apiRoutes.get('/chapter/:id',ChapterController.getChapterById);
-    apiRoutes.put('/chapter/:id',ChapterController.updateChapter);
-    apiRoutes.get('/chapters/:id',ChapterController.getChapters);
-    apiRoutes.delete('/chapter/:id',ChapterController.deleteChapter);
-    app.use('/v1',apiRoutes);
+    apiRoutes.post('/chapter', ChapterController.createChapter);
+    apiRoutes.get('/chapter/:id', ChapterController.getChapterById);
+    apiRoutes.put('/chapter/:id', ChapterController.updateChapter);
+    apiRoutes.get('/chapters/:id', ChapterController.getChapters);
+    apiRoutes.delete('/chapter/:id', ChapterController.deleteChapter);
+
+    //questions urls
+    apiRoutes.post('/question', QuestionsController.createQuestion);
+    apiRoutes.get('/question/:id', QuestionsController.getQuestionById);
+    apiRoutes.put('/question/:id', QuestionsController.updateQuestion);
+    apiRoutes.get('/questions/:id', QuestionsController.getQuestions);
+    apiRoutes.delete('/question/:id', QuestionsController.deleteQuestion);
     
+    app.use('/v1', apiRoutes);
+
 }
