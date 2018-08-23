@@ -136,22 +136,20 @@ exports.deleteQuestion = function (req, res) {
 
 exports.getQuestionById = function (req, res) {
     models.questions.hasMany(models.question_options, { foreignKey: 'qnsId' });
-    models.question_options.hasOne(models.question_answers, { foreignKey: 'optionId' });
+    models.questions.hasOne(models.question_answers, { foreignKey: 'qnsId' });
     models.questions.findAll({
         where: { id: req.params.id },
         include: [
             {
                 model: models.question_options,
                 where: { 'qnsId': req.params.id },
-                include: [
-                    {
-                        model: models.question_answers,
-                        where: { 'qnsId': req.params.id },
-                        
-                    }
-                ]
+            },
+            {
+                model: models.question_answers,
+                where: { 'qnsId': req.params.id }
             }
-        ]
+        ],
+
     }).then(question => {
         let result = {};
         if (question) {
