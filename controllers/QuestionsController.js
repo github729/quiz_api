@@ -93,22 +93,22 @@ exports.updateQuestion = function (req, res) {
 };
 
 exports.getQuestions = function (req, res) {
-    models.chapters.belongsTo(models.courses, { foreignKey: 'courseId' })
-    models.chapters.findAll({
+    models.questions.belongsTo(models.chapters, { foreignKey: 'chapterId' });
+    models.questions.findAll({
         include: [
             {
-                model: models.courses,
+                model: models.chapters,
                 where: { 'id': req.params.id }
             }
         ]
-    }).then(chapters => {
+    }).then(questions => {
         let result = {};
-        if (chapters) {
+        if (questions) {
             result.success = true;
-            result.chapters = chapters;
+            result.questions = questions;
         } else {
             result.success = false;
-            result.message = 'No chapters Found';
+            result.message = 'No Questions Found';
         }
         res.json(result);
     });
@@ -117,13 +117,13 @@ exports.deleteQuestion = function (req, res) {
 
     let result = {};
     if (req.params.id != undefined) {
-        models.chapters.destroy({ where: { id: req.params.id } }).then((rowDeleted) => {
+        models.questions.destroy({ where: { id: req.params.id } }).then((rowDeleted) => {
             result.success = true;
-            result.message = (rowDeleted === 1) ? 'Chapter deleted successfully' : 'Unable to delete Chapter';
+            result.message = (rowDeleted === 1) ? 'Question deleted successfully' : 'Unable to delete Question';
             res.json(result);
         }, (err) => {
             result.success = false;
-            result.message = ' this Chapter is already used by another user';
+            result.message = ' this Question is already used by another user';
             res.json(result);
         })
     }
@@ -135,13 +135,28 @@ exports.deleteQuestion = function (req, res) {
 };
 
 exports.getQuestionById = function (req, res) {
-    models.chapters.findOne({
-        where: { id: req.params.id }
-    }).then(chapter => {
+    models.questions.hasMany(models.question_options, { foreignKey: 'qnsId' });
+    models.question_options.hasOne(models.question_answers, { foreignKey: 'optionId' });
+    models.questions.findAll({
+        where: { id: req.params.id },
+        include: [
+            {
+                model: models.question_options,
+                where: { 'qnsId': req.params.id },
+                include: [
+                    {
+                        model: models.question_answers,
+                        where: { 'qnsId': req.params.id },
+                        
+                    }
+                ]
+            }
+        ]
+    }).then(question => {
         let result = {};
-        if (chapter) {
+        if (question) {
             result.success = true;
-            result.chapter = chapter;
+            result.question = question;
         } else {
             result.success = false;
             result.message = 'No chapter available'
