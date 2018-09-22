@@ -8,14 +8,14 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      qnsId: {
+      question_id: {
         type: Sequelize.INTEGER
       },
-      optId: {
-        type: Sequelize.INTEGER
-      },
-      option_text: {
+      options: {
         type: Sequelize.STRING
+      },
+      is_correct: {
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,

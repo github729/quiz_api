@@ -8,35 +8,28 @@ exports.createQuestion = function (req, res) {
         if (question) {
             if (postData.options != undefined) {
                 let options = [];
-                let i = 0;
                 for (let option in postData.options) {
-                    if (option != 'answer') {
-                        i++;
-                        options.push({ 'qnsId': question.id, 'optId': i, 'option_text': postData.options[option] });
+                    if (option == postData.options['is_correct']) {
+                        if (option != 'is_correct') {
+                            options.push({ 'question_id': question.id, 'options': postData.options[option], 'is_correct': 1 });
+                        }
+                    } else {
+                        if (option != 'is_correct') {
+                            options.push({ 'question_id': question.id, 'options': postData.options[option], 'is_correct': 0 });
+                        }
                     }
                 }
                 models.question_options.bulkCreate(options).then(function (option) {
                     if (option) {
-                        option.forEach(val => {
-                            if (val.optId == postData.options.answer && val.qnsId == question.id) {
-                                answer = { 'qnsId': question.id, 'optionId': val.id, 'answer': val.option_text }
-                            }
-                        });
-                        models.question_answers.create(answer).then(answer => {
-                            if (answer) {
-                                result.success = true;
-                                result.message = 'Question Successfully created';
-                            }
-                            else {
-                                result.success = true;
-                                result.message = 'Question Not Successfully created'
-                            }
-                            res.json(result);
-                        }).catch(function (err) {
-                            result.success = false;
-                            result.message = err.message;
-                            return res.json(result);
-                        });
+                        if (option) {
+                            result.success = true;
+                            result.message = 'Question Successfully created';
+                        }
+                        else {
+                            result.success = true;
+                            result.message = 'Question Not Successfully created'
+                        }
+                        res.json(result);
                     }
                 }).catch(function (err) {
                     result.success = false;
@@ -50,39 +43,59 @@ exports.createQuestion = function (req, res) {
         result.message = err.message;
         return res.json(result);
     });
-
 }
 
 exports.updateQuestion = function (req, res) {
     let postData = req.body;
-    models.chapters.findOne({
+    models.questions.findOne({
         where: { id: postData.id }, required: false
-    }).then(chapters => {
+    }).then(question => {
         let result = {};
-        if (chapters) {
-            chapters.updateAttributes(postData).then((updateChapter) => {
-                if (updateChapter) {
-                    result.success = true;
-                    result.message = 'Chapter Updated successfully ';
+        if (question) {
+            question.updateAttributes(postData).then((updateQuestion) => {
+                if (updateQuestion) {
+                    models.question_options.findAll({
+                        where: { question_id: postData.id }
+                    }).then(options => {
+                        if (options) {
+                            if (postData.options != undefined) {
+                                let updateOptions = [];
+                                for (let option in postData.options) {
+                                    if (option == postData.options['is_correct']) {
+                                        if (option != 'is_correct') {
+                                            updateOptions.push({ 'question_id': question.id, 'options': postData.options[option], 'is_correct': 1 });
+                                        }
+                                    } else {
+                                        if (option != 'is_correct') {
+                                            updateOptions.push({ 'question_id': question.id, 'options': postData.options[option], 'is_correct': 0 });
+                                        }
+                                    }
+                                }
+                                options.forEach((val, index) => {
+                                    val.updateAttributes(updateOptions[index]).then((updateOption) => {
+                                    }).catch(function (err) {
+                                        // every other error                
+                                        return res.status(400).json({
+                                            success: false,
+                                            message: err
+                                        });
+                                    });
+                                })
+                                res.json({
+                                    success: true,
+                                    message: 'Question Updated successfully '
+                                });
+                            }
+                        }
+                    })
                 }
-                else {
-                    result.success = true;
-                    result.message = 'Chapter Not Updated successfully ';
-                }
-                res.json(result);
             }).catch(Sequelize.ValidationError, function (err) {
                 // respond with validation errors                
                 return res.status(200).json({
                     success: false,
                     message: err.message
                 });
-            }).catch(function (err) {
-                // every other error                
-                return res.status(400).json({
-                    success: false,
-                    message: err
-                });
-            });
+            })
         }
         else {
             result.success = false;
@@ -94,11 +107,15 @@ exports.updateQuestion = function (req, res) {
 
 exports.getQuestions = function (req, res) {
     models.questions.belongsTo(models.chapters, { foreignKey: 'chapterId' });
+    models.questions.hasMany(models.question_options, { foreignKey: 'question_id' });
     models.questions.findAll({
         include: [
             {
                 model: models.chapters,
                 where: { 'id': req.params.id }
+            },
+            {
+                model: models.question_options
             }
         ]
     }).then(questions => {
@@ -135,21 +152,15 @@ exports.deleteQuestion = function (req, res) {
 };
 
 exports.getQuestionById = function (req, res) {
-    models.questions.hasMany(models.question_options, { foreignKey: 'qnsId' });
-    models.questions.hasOne(models.question_answers, { foreignKey: 'qnsId' });
-    models.questions.findAll({
+    models.questions.hasMany(models.question_options, { foreignKey: 'question_id' });
+    models.questions.findOne({
         where: { id: req.params.id },
         include: [
             {
                 model: models.question_options,
-                where: { 'qnsId': req.params.id },
-            },
-            {
-                model: models.question_answers,
-                where: { 'qnsId': req.params.id }
+                where: { 'question_id': req.params.id },
             }
         ],
-
     }).then(question => {
         let result = {};
         if (question) {
