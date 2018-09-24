@@ -2,6 +2,8 @@ var express = require('express');
 var CourseController = require('./controllers/CourseController');
 var ChapterController = require('./controllers/ChapterController');
 var QuestionsController = require('./controllers/QuestionsController');
+var UserAnswersController = require('./controllers/UserAnswersController');
+
 module.exports = function (app) {
     app.get('/', (req, res) => {
         res.send('The Quiz Api watch at 1332')
@@ -33,6 +35,10 @@ module.exports = function (app) {
     apiRoutes.get('/questions/:id', QuestionsController.getQuestions);
     apiRoutes.delete('/question/:id', QuestionsController.deleteQuestion);
     
+    //user answers urls 
+    apiRoutes.post('/user_answers', UserAnswersController.createUserAnswers);
+    apiRoutes.post('/exam_results', UserAnswersController.GetExamsResults);
+
     app.use('/v1', apiRoutes);
 
 }
