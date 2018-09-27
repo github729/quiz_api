@@ -8,9 +8,6 @@ var UserController = require('./controllers/UserController');
 module.exports = function (app) {
     app.get('/', (req, res) => {
         res.send('The Quiz Api watch at 1332')
-
-
-        
     });
     var apiRoutes = express.Router();
 
