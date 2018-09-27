@@ -3,6 +3,7 @@ var CourseController = require('./controllers/CourseController');
 var ChapterController = require('./controllers/ChapterController');
 var QuestionsController = require('./controllers/QuestionsController');
 var UserAnswersController = require('./controllers/UserAnswersController');
+var UserController = require('./controllers/UserController');
 
 module.exports = function (app) {
     app.get('/', (req, res) => {
@@ -13,6 +14,14 @@ module.exports = function (app) {
     apiRoutes.get('/', (req, res) => {
         res.send('Welcome to Quiz Api')
     });
+
+    apiRoutes.post('/login', UserController.Login);
+    
+    //Middleware function to authentication
+    apiRoutes.use(UserController.authenticate);
+
+    //user urls
+    apiRoutes.post('/user-signup', UserController.Register);
 
     //courses urls
     apiRoutes.post('/course', CourseController.createCourse);
@@ -34,7 +43,7 @@ module.exports = function (app) {
     apiRoutes.put('/question/:id', QuestionsController.updateQuestion);
     apiRoutes.get('/questions/:id', QuestionsController.getQuestions);
     apiRoutes.delete('/question/:id', QuestionsController.deleteQuestion);
-    
+
     //user answers urls 
     apiRoutes.post('/user_answers', UserAnswersController.createUserAnswers);
     apiRoutes.post('/exam_results', UserAnswersController.GetExamsResults);
