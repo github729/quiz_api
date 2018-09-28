@@ -14,14 +14,12 @@ module.exports = function (app) {
     apiRoutes.get('/', (req, res) => {
         res.send('Welcome to Quiz Api')
     });
-
-    apiRoutes.post('/login', UserController.Login);
-    
-    //Middleware function to authentication
-    apiRoutes.use(UserController.authenticate);
-
     //user urls
     apiRoutes.post('/user-signup', UserController.Register);
+    apiRoutes.post('/login', UserController.Login);
+
+    //Middleware function to authentication
+    apiRoutes.use(UserController.authenticate);
 
     //courses urls
     apiRoutes.post('/course', CourseController.createCourse);
