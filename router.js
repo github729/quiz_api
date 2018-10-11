@@ -46,6 +46,9 @@ module.exports = function (app) {
     apiRoutes.post('/user_answers', UserAnswersController.createUserAnswers);
     apiRoutes.post('/exam_results', UserAnswersController.GetExamsResults);
 
+    //Test urls
+    apiRoutes.post('/test', UserAnswersController.createTest);
+    
     app.use('/v1', apiRoutes);
 
 }

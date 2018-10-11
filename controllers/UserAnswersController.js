@@ -21,12 +21,7 @@ exports.GetExamsResults = function (req, res) {
     models.questions.hasMany(models.question_options, { foreignKey: 'question_id' });
     let postData = req.body;
     models.user_answers.findAll({
-        where: {
-            $and: [
-                { 'user_id': postData.userId },
-                { 'test_id': postData.testId }
-            ]
-        },
+        where: { 'test_id': postData.test_id },
         include: [
             {
                 model: models.questions,
@@ -49,4 +44,19 @@ exports.GetExamsResults = function (req, res) {
         }
         res.json(result);
     })
+}
+exports.createTest = function (req, res) {
+    let postData = req.body;
+    models.tests.create(postData).then(test => {
+        let result = {};
+        if (test) {
+            result.success = true;
+            result.data = test;
+        }
+        else {
+            result.success = true;
+            result.data = 'Exam Not Submitted Successfully! Please try Again '
+        }
+        res.json(result);
+    });
 }
