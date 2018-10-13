@@ -4,6 +4,7 @@ var ChapterController = require('./controllers/ChapterController');
 var QuestionsController = require('./controllers/QuestionsController');
 var UserAnswersController = require('./controllers/UserAnswersController');
 var UserController = require('./controllers/UserController');
+var JobsController = require('./controllers/JobsController');
 
 module.exports = function (app) {
     app.get('/', (req, res) => {
@@ -18,6 +19,14 @@ module.exports = function (app) {
     apiRoutes.post('/user-signup', UserController.Register);
     apiRoutes.post('/login', UserController.Login);
 
+    //Jobs urls
+    apiRoutes.get('/job/:id', JobsController.getJobById);
+    apiRoutes.put('/job/:id', JobsController.updateJob);
+    apiRoutes.get('/jobs', JobsController.getJobs);
+    apiRoutes.delete('/job/:id', JobsController.deleteJob);
+    apiRoutes.post('/job', JobsController.createJob);
+
+    
     //Middleware function to authentication
     apiRoutes.use(UserController.authenticate);
 
@@ -48,7 +57,9 @@ module.exports = function (app) {
 
     //Test urls
     apiRoutes.post('/test', UserAnswersController.createTest);
-    
+
+
+
     app.use('/v1', apiRoutes);
 
 }
