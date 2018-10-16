@@ -5,6 +5,7 @@ var QuestionsController = require('./controllers/QuestionsController');
 var UserAnswersController = require('./controllers/UserAnswersController');
 var UserController = require('./controllers/UserController');
 var JobsController = require('./controllers/JobsController');
+var DataController = require('./controllers/DataController');
 
 module.exports = function (app) {
     app.get('/', (req, res) => {
@@ -15,6 +16,9 @@ module.exports = function (app) {
     apiRoutes.get('/', (req, res) => {
         res.send('Welcome to Quiz Api')
     });
+    //data urls
+    apiRoutes.get('/jobs-by-location', DataController.getAllLocations);
+
     //user urls
     apiRoutes.post('/user-signup', UserController.Register);
     apiRoutes.post('/login', UserController.Login);
@@ -22,7 +26,7 @@ module.exports = function (app) {
     //Jobs urls
     apiRoutes.get('/job/:id', JobsController.getJobById);
     apiRoutes.put('/job/:id', JobsController.updateJob);
-    apiRoutes.get('/jobs', JobsController.getJobs);
+    apiRoutes.post('/jobs', JobsController.getJobs);
     apiRoutes.delete('/job/:id', JobsController.deleteJob);
     apiRoutes.post('/job', JobsController.createJob);
 

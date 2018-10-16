@@ -68,7 +68,24 @@ exports.updateJob = function (req, res) {
 };
 
 exports.getJobs = function (req, res) {
-    models.jobs.findAll({}).then(jobs => {
+    let postData = req.body;
+    let where = {};
+    if (postData.location) {
+        where = { jlocation: postData.location }
+    }
+    if (postData.skill) {
+        where = { requiredskills: postData.skill }
+    }
+    if (postData.education) {
+        where = { jeligibility: postData.education }
+    }
+    if (postData.role) {
+        where = { jrole: postData.role }
+    }
+    if (postData.type) {
+        where = { jtype: postData.type }
+    }
+    models.jobs.findAll({ where: where }).then(jobs => {
         let result = {};
         if (jobs) {
             result.success = true;

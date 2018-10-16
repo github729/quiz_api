@@ -50,6 +50,9 @@ module.exports = {
       jurl: {
         type: Sequelize.STRING
       },
+      jtype: {
+        type: Sequelize.STRING
+      },
       jclogo: {
         type: Sequelize.STRING
       },
