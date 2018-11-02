@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     requiredskills: DataTypes.STRING,
     jurl: DataTypes.STRING,
     jtype: DataTypes.STRING,
+    // salary: DataTypes.NUMBER,
     jclogo: DataTypes.STRING
   }, {});
   jobs.associate = function(models) {

@@ -85,6 +85,9 @@ exports.getJobs = function (req, res) {
     if (postData.type) {
         where = { jtype: postData.type }
     }
+    if (postData.salary) {
+        where = { jtype: postData.type }
+    }
     models.jobs.findAll({ where: where }).then(jobs => {
         let result = {};
         if (jobs) {
